@@ -1,0 +1,4 @@
+db_engine: "postgre_sql" # postgre_sql, sqlite
+storage_path: "./storage/storage.db"
+server:
+  address: "localhost:8080"
