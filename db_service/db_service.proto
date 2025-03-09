@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package grpc.api;
+
+option go_package = "internal/grpc_api";
+
+service DBService {
+    rpc Register (AuthRequest) returns (AuthResponse);
+    rpc Authorize (AuthRequest) returns (AuthResponse);
+    rpc FindMessages (FindMessagesRequest) returns (FindMessagesResponse);
+    rpc FindUser (FindUserRequest) returns (FindMessagesResponse);
+    rpc CreateMessage (MessageCreationRequest) returns (MessageCreationResponse);
+    rpc CreateMessagesPool (MessagePoolCreationRequest) returns (MessagePoolCreationResponse);
+}
+
+// request for authorization and registration
+message AuthRequest {
+    string username = 1;
+    string password = 2;
+}
+
+// response for authorization and registration
+message AuthResponse {
+    uint32 id = 1;
+    bool successful = 2;
+}
+
+// request for create a single message
+message MessageCreationRequest {
+    string text = 1;
+    string time = 2;
+    string date = 3;
+    uint32 from_user = 4;
+    uint32 to_user = 5;
+}
+
+// response for creating a message
+message MessageCreationResponse {
+    uint32 id = 1;
+}
+
+// request for creating a pool of messages
+message MessagePoolCreationRequest {
+    repeated MessageCreationResponse messages = 1;
+}
+
+// response for creating a pool of messages
+message MessagePoolCreationResponse {
+    repeated uint32 ids = 1;
+}
+
+// request for finding a user or users by username or prefix
+message FindUserRequest {
+    string username = 1;
+}
+
+// response for finding a user or users by username or prefix
+message FindUserResponse {
+    repeated string usernames = 1;
+}
+
+// request for finding messages by user id
+message FindMessagesRequest {
+    uint32 id = 1;
+    string date = 2;
+}
+
+// message object
+message MessageForUser {
+    string text = 1;
+    string time = 2;
+    string date = 3;
+    uint32 to_user = 4;
+}
+
+// response for finding messages by user id
+message FindMessagesResponse {
+    repeated MessageForUser messages = 1;
+}

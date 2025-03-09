@@ -12,6 +12,7 @@ type Message struct {
 	ID           uint   `gorm:"primaryKey"`
 	Text         string `gorm:"type:text;not null"`
 	CreatingTime string `gorm:"type:time;not null"`
+	CreatingDate string `form:"type:date;not null"`
 	FromUser     uint
 	ToUser       uint
 }
