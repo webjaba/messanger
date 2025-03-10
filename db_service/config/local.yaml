@@ -1,4 +1,7 @@
 db_engine: "postgre_sql" # postgre_sql, sqlite
 storage_path: "./storage/storage.db"
+log_level: "debug" # debug, info, error
+log_output: "stdout" # stdout, file
+log_file_path: ""
 server:
   address: "localhost:8080"

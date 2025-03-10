@@ -1,7 +1,9 @@
 package storage
 
+import "time"
+
 type User struct {
-	ID               uint      `gorm:"primaryKey"`
+	ID               uint      `gorm:"primaryKey;autoIncrement"`
 	Username         string    `gorm:"size:10;unique;not null"`
 	Password         string    `gorm:"size:10;not null"`
 	MessagesSended   []Message `gorm:"foreignKey:FromUser;references:ID"`
@@ -9,12 +11,9 @@ type User struct {
 }
 
 type Message struct {
-	ID           uint   `gorm:"primaryKey"`
-	Text         string `gorm:"type:text;not null"`
-	CreatingTime string `gorm:"type:time;not null"`
-	CreatingDate string `form:"type:date;not null"`
-	FromUser     uint
-	ToUser       uint
+	ID               uint      `gorm:"primaryKey;autoIncrement"`
+	Text             string    `gorm:"type:text;not null"`
+	CreatingDateTime time.Time `form:"not null"`
+	FromUser         uint
+	ToUser           uint
 }
-
-// db.Model(&Message{}).AddForeignKey("from_user", "users(id)", "CASCADE", "CASCADE")

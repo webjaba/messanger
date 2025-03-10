@@ -13,6 +13,9 @@ type GRPCServer struct {
 type Config struct {
 	StoragePath string     `yaml:"storage_path"`
 	DBEngine    string     `yaml:"db_engine"`
+	LogLevel    string     `yaml:"log_level"`
+	LogOutput   string     `yaml:"log_output"`
+	LogFilePath string     `yaml:"log_file_path"`
 	Server      GRPCServer `yaml:"server"`
 }
 

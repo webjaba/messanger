@@ -2,18 +2,21 @@ package main
 
 import (
 	"db-service/internal/config"
+	"db-service/internal/logger"
 	"db-service/internal/storage"
-	"fmt"
 )
 
 func main() {
 	cfg := config.MustLoad()
 
-	fmt.Println(cfg)
+	log, file := logger.SetUpLogger(cfg)
+	defer logger.Close(file)
 
 	db := storage.ConnectDB(cfg)
 
+	log.Info("DB connection was successful")
+
 	storage.Migrate(db)
 
-	fmt.Println(db)
+	log.Info("Migrations were successful")
 }
