@@ -24,6 +24,4 @@ func main() {
 	grpcServer := server.InitServer(cfg, log)
 
 	_ = grpcServer
-
-	log.Info("grpc server initialization was succesful")
 }

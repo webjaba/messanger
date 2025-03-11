@@ -8,7 +8,7 @@ service DBService {
     rpc Register (AuthRequest) returns (AuthResponse);
     rpc Authorize (AuthRequest) returns (AuthResponse);
     rpc FindMessages (FindMessagesRequest) returns (FindMessagesResponse);
-    rpc FindUser (FindUserRequest) returns (FindMessagesResponse);
+    rpc FindUser (FindUserRequest) returns (FindUserResponse);
     rpc CreateMessage (MessageCreationRequest) returns (MessageCreationResponse);
     rpc CreateMessagesPool (MessagePoolCreationRequest) returns (MessagePoolCreationResponse);
 }

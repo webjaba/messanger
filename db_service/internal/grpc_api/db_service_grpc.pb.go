@@ -34,7 +34,7 @@ type DBServiceClient interface {
 	Register(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	Authorize(ctx context.Context, in *AuthRequest, opts ...grpc.CallOption) (*AuthResponse, error)
 	FindMessages(ctx context.Context, in *FindMessagesRequest, opts ...grpc.CallOption) (*FindMessagesResponse, error)
-	FindUser(ctx context.Context, in *FindUserRequest, opts ...grpc.CallOption) (*FindMessagesResponse, error)
+	FindUser(ctx context.Context, in *FindUserRequest, opts ...grpc.CallOption) (*FindUserResponse, error)
 	CreateMessage(ctx context.Context, in *MessageCreationRequest, opts ...grpc.CallOption) (*MessageCreationResponse, error)
 	CreateMessagesPool(ctx context.Context, in *MessagePoolCreationRequest, opts ...grpc.CallOption) (*MessagePoolCreationResponse, error)
 }
@@ -77,9 +77,9 @@ func (c *dBServiceClient) FindMessages(ctx context.Context, in *FindMessagesRequ
 	return out, nil
 }
 
-func (c *dBServiceClient) FindUser(ctx context.Context, in *FindUserRequest, opts ...grpc.CallOption) (*FindMessagesResponse, error) {
+func (c *dBServiceClient) FindUser(ctx context.Context, in *FindUserRequest, opts ...grpc.CallOption) (*FindUserResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(FindMessagesResponse)
+	out := new(FindUserResponse)
 	err := c.cc.Invoke(ctx, DBService_FindUser_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
@@ -114,7 +114,7 @@ type DBServiceServer interface {
 	Register(context.Context, *AuthRequest) (*AuthResponse, error)
 	Authorize(context.Context, *AuthRequest) (*AuthResponse, error)
 	FindMessages(context.Context, *FindMessagesRequest) (*FindMessagesResponse, error)
-	FindUser(context.Context, *FindUserRequest) (*FindMessagesResponse, error)
+	FindUser(context.Context, *FindUserRequest) (*FindUserResponse, error)
 	CreateMessage(context.Context, *MessageCreationRequest) (*MessageCreationResponse, error)
 	CreateMessagesPool(context.Context, *MessagePoolCreationRequest) (*MessagePoolCreationResponse, error)
 	mustEmbedUnimplementedDBServiceServer()
@@ -136,7 +136,7 @@ func (UnimplementedDBServiceServer) Authorize(context.Context, *AuthRequest) (*A
 func (UnimplementedDBServiceServer) FindMessages(context.Context, *FindMessagesRequest) (*FindMessagesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindMessages not implemented")
 }
-func (UnimplementedDBServiceServer) FindUser(context.Context, *FindUserRequest) (*FindMessagesResponse, error) {
+func (UnimplementedDBServiceServer) FindUser(context.Context, *FindUserRequest) (*FindUserResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method FindUser not implemented")
 }
 func (UnimplementedDBServiceServer) CreateMessage(context.Context, *MessageCreationRequest) (*MessageCreationResponse, error) {
