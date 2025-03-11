@@ -7,7 +7,8 @@ import (
 )
 
 type GRPCServer struct {
-	Address string `yaml:"address"`
+	IP   string `yaml:"ip"`
+	Port string `yaml:"port"`
 }
 
 type Config struct {
