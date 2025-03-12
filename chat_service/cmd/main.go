@@ -2,14 +2,18 @@ package main
 
 import (
 	"chat_service/internal/config"
+	"chat_service/internal/logger"
 	"fmt"
 )
 
 func main() {
-	config := config.MustLoad()
-	fmt.Printf("%+v\n", config)
+	cfg := config.MustLoad()
+	fmt.Printf("%+v\n", cfg)
 
-	// TODO: init logger
+	log, file := logger.SetUpLogger(cfg)
+	defer logger.Close(file)
+
+	log.Info("info")
 
 	// TODO: init server
 
