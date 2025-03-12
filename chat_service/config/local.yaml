@@ -1,0 +1,6 @@
+log_level: "debug" # debug, info, error
+log_output: "stdout" # stdout, file
+log_file_path: ""
+server:
+  ip: "localhost"
+  port: "8089"
