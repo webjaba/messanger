@@ -4,3 +4,6 @@ log_file_path: ""
 server:
   ip: "localhost"
   port: "8089"
+client:
+  ip: "localhost"
+  port: "8082"

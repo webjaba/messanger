@@ -2,6 +2,7 @@ package main
 
 import (
 	"chat_service/internal/config"
+	grpcclient "chat_service/internal/grpc/client"
 	"chat_service/internal/logger"
 	"fmt"
 )
@@ -14,6 +15,11 @@ func main() {
 	defer logger.Close(file)
 
 	log.Info("info")
+
+	grpcClient, conn := grpcclient.InitClient(cfg, log)
+	defer conn.Close()
+
+	fmt.Println(grpcClient)
 
 	// TODO: init server
 
