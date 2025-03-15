@@ -5,4 +5,4 @@ log_output: "stdout" # stdout, file
 log_file_path: ""
 server:
   ip: "localhost"
-  port: "8082"
+  port: "8123"

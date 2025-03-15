@@ -3,7 +3,7 @@ package storage
 import "time"
 
 type User struct {
-	ID               uint      `gorm:"primaryKey;autoIncrement"`
+	ID               uint32    `gorm:"primaryKey;autoIncrement"`
 	Username         string    `gorm:"size:10;unique;not null"`
 	Password         string    `gorm:"size:10;not null"`
 	MessagesSended   []Message `gorm:"foreignKey:FromUser;references:ID"`
@@ -11,7 +11,7 @@ type User struct {
 }
 
 type Message struct {
-	ID               uint      `gorm:"primaryKey;autoIncrement"`
+	ID               uint32    `gorm:"primaryKey;autoIncrement"`
 	Text             string    `gorm:"type:text;not null"`
 	CreatingDateTime time.Time `form:"not null"`
 	FromUser         uint
