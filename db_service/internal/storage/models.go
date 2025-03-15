@@ -14,6 +14,6 @@ type Message struct {
 	ID               uint32    `gorm:"primaryKey;autoIncrement"`
 	Text             string    `gorm:"type:text;not null"`
 	CreatingDateTime time.Time `form:"not null"`
-	FromUser         uint
-	ToUser           uint
+	FromUser         uint32
+	ToUser           uint32
 }

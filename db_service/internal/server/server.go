@@ -4,7 +4,9 @@ import (
 	"context"
 	"db-service/internal/config"
 	"db-service/internal/storage"
+	"fmt"
 	"net"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"github.com/webjaba/messanger/grpc_api"
@@ -84,7 +86,7 @@ func (s *Server) Register(ctx context.Context, in *grpc_api.AuthRequest) (*grpc_
 
 	if user.Username != "" {
 		err := status.Error(
-			codes.InvalidArgument,
+			codes.AlreadyExists,
 			"User with this username already exists",
 		)
 		s.Logger.Errorf("Error %v, %v", method, err)
@@ -99,17 +101,77 @@ func (s *Server) Register(ctx context.Context, in *grpc_api.AuthRequest) (*grpc_
 	return &grpc_api.AuthResponse{Id: user.ID}, nil
 }
 
-// func (s *Server) Authorize(ctx *context.Context, in *grpc_api.AuthRequest) (*grpc_api.AuthResponse, error) {
+func (s *Server) Authorize(ctx context.Context, in *grpc_api.AuthRequest) (*grpc_api.AuthResponse, error) {
+	method := "server.Authorize"
+	user := storage.User{}
+
+	s.DB.First(&user, "username = ?", in.Username)
+
+	if user.Username != in.Username {
+		err := status.Error(
+			codes.InvalidArgument,
+			"user with this username does not exists",
+		)
+		s.Logger.Errorf("Error %v, %v", method, err)
+		return nil, err
+	}
+
+	if user.Password != in.Password {
+		err := status.Error(
+			codes.InvalidArgument,
+			"Incorrect password",
+		)
+		s.Logger.Errorf("Error %v, %v", method, err)
+		return nil, err
+	}
+
+	return &grpc_api.AuthResponse{Id: user.ID}, nil
+}
+
+func (s *Server) FindUser(ctx context.Context, in *grpc_api.FindUserRequest) (*grpc_api.FindUserResponse, error) {
+	users := []storage.User{}
+	s.DB.Where("username LIKE ? LIMIT 10", fmt.Sprintf("%%%v%%", in.Username)).Find(&users)
+	usernames := []string{}
+	for _, user := range users {
+		usernames = append(usernames, user.Username)
+	}
+	return &grpc_api.FindUserResponse{Usernames: usernames}, nil
+}
+
+func (s *Server) CreateMessage(ctx context.Context, in *grpc_api.MessageCreationRequest) (*grpc_api.MessageCreationResponse, error) {
+	creatingTime, err := time.Parse("2006-01-02 15:04:05", in.Date+" "+in.Time)
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, "Invalid time format")
+	}
+	msg := storage.Message{
+		Text:             in.Text,
+		CreatingDateTime: creatingTime,
+		FromUser:         in.FromUser,
+		ToUser:           in.ToUser,
+	}
+	s.DB.Create(&msg)
+	return &grpc_api.MessageCreationResponse{Id: msg.ID}, nil
+
+}
+
+// func (s *Server) CreateMessagesPool(ctx context.Context, in *grpc_api.MessagePoolCreationRequest) (*grpc_api.MessagePoolCreationResponse, error) {
+// 	msgPool := make([]storage.Message, 0, len(in.Messages))
+// 	for _, msgReq := range in.Messages {
+// 		creatingTime, err := time.Parse("2006-01-02 15:04:05", msgReq.Date+" "+msgReq.Time)
+// 		if err != nil {
+// 			return nil, status.Error(codes.InvalidArgument, "Invalid time format")
+// 		}
+// 		msgPool = append(
+// 			msgPool,
+// 			storage.Message{
+// 				Text:             msgReq.Text,
+// 				CreatingDateTime: creatingTime,
+// 				FromUser:         msgReq.FromUser,
+// 				ToUser:           msgReq.ToUser,
+// 			},
+// 		)
+// 	}
 // }
 
-// func (s *Server) FindMessages(ctx *context.Context, in *grpc_api.FindMessagesRequest) (*grpc_api.FindMessagesResponse, error) {
-// }
-
-// func (s *Server) FindUser(ctx *context.Context, in *grpc_api.FindUserRequest) (*grpc_api.FindUserResponse, error) {
-// }
-
-// func (s *Server) CreateMessage(ctx *context.Context, in *grpc_api.MessageCreationRequest) (*grpc_api.MessageCreationResponse, error) {
-// }
-
-// func (s *Server) CreateMessagesPool(ctx *context.Context, in *grpc_api.MessagePoolCreationRequest) (*grpc_api.MessagePoolCreationResponse, error) {
+// func (s *Server) FindMessages(ctx context.Context, in *grpc_api.FindMessagesRequest) (*grpc_api.FindMessagesResponse, error) {
 // }
