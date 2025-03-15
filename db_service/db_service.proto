@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package grpc.api;
 
-option go_package = "internal/grpc_api";
+option go_package = "/grpc_api";
 
 service DBService {
     rpc Register (AuthRequest) returns (AuthResponse);
@@ -22,7 +22,6 @@ message AuthRequest {
 // response for authorization and registration
 message AuthResponse {
     uint32 id = 1;
-    uint32 status = 2;
 }
 
 // request for create a single message
@@ -37,7 +36,6 @@ message MessageCreationRequest {
 // response for creating a message
 message MessageCreationResponse {
     uint32 id = 1;
-    uint32 status = 2;
 }
 
 // request for creating a pool of messages
@@ -48,7 +46,6 @@ message MessagePoolCreationRequest {
 // response for creating a pool of messages
 message MessagePoolCreationResponse {
     repeated uint32 ids = 1;
-    uint32 status = 2;
 }
 
 // request for finding a user or users by username or prefix
@@ -59,7 +56,6 @@ message FindUserRequest {
 // response for finding a user or users by username or prefix
 message FindUserResponse {
     repeated string usernames = 1;
-    uint32 status = 2;
 }
 
 // request for finding messages by user id
@@ -79,5 +75,4 @@ message MessageForUser {
 // response for finding messages by user id
 message FindMessagesResponse {
     repeated MessageForUser messages = 1;
-    uint32 status = 2;
 }

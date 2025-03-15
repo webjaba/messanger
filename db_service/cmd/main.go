@@ -21,7 +21,7 @@ func main() {
 
 	log.Info("Migrations were successful")
 
-	grpcServer := server.InitServer(cfg, log)
+	grpcServer := server.InitServer(cfg, log, db)
 
 	_ = grpcServer
 }
