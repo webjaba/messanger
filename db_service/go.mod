@@ -25,4 +25,7 @@ require (
 	gorm.io/driver/postgres v1.5.11 // indirect
 	gorm.io/gorm v1.25.12 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
+	github.com/webjaba/messanger/grpc_api v0.0.0
 )
+
+replace github.com/webjaba/messanger/grpc_api  => ../grpc_api

@@ -17,4 +17,7 @@ require (
 	google.golang.org/protobuf v1.36.4 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
+	github.com/webjaba/messanger/grpc_api v0.0.0
 )
+
+replace github.com/webjaba/messanger/grpc_api  => ../grpc_api
