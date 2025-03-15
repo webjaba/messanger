@@ -4,22 +4,23 @@ import (
 	"chat_service/internal/config"
 	grpcclient "chat_service/internal/grpc/client"
 	"chat_service/internal/logger"
-	"fmt"
 )
 
 func main() {
 	cfg := config.MustLoad()
-	fmt.Printf("%+v\n", cfg)
 
 	log, file := logger.SetUpLogger(cfg)
 	defer logger.Close(file)
 
-	log.Info("info")
+	log.Debugf("Config: %+v\n", cfg)
+
+	log.Info("logger setup successful")
 
 	grpcClient, conn := grpcclient.InitClient(cfg, log)
 	defer conn.Close()
 
-	fmt.Println(grpcClient)
+	_ = grpcClient
+	log.Infof("grpc client connected to: %v", conn.CanonicalTarget())
 
 	// TODO: init server
 

@@ -2,9 +2,9 @@ package grpcclient
 
 import (
 	"chat_service/internal/config"
-	"chat_service/internal/grpc/grpc_api"
 
 	"github.com/sirupsen/logrus"
+	"github.com/webjaba/messanger/grpc_api"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
