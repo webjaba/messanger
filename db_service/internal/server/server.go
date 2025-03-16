@@ -139,7 +139,7 @@ func (s *Server) FindUser(ctx context.Context, in *grpc_api.FindUserRequest) (*g
 }
 
 func (s *Server) CreateMessage(ctx context.Context, in *grpc_api.MessageCreationRequest) (*grpc_api.MessageCreationResponse, error) {
-	creatingTime, err := time.Parse("2006-01-02 15:04:05", in.Date+" "+in.Time)
+	creatingTime, err := time.Parse("2006-01-02 15:04:05", in.GetDatetime())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, "Invalid time format")
 	}
@@ -154,24 +154,42 @@ func (s *Server) CreateMessage(ctx context.Context, in *grpc_api.MessageCreation
 
 }
 
-// func (s *Server) CreateMessagesPool(ctx context.Context, in *grpc_api.MessagePoolCreationRequest) (*grpc_api.MessagePoolCreationResponse, error) {
-// 	msgPool := make([]storage.Message, 0, len(in.Messages))
-// 	for _, msgReq := range in.Messages {
-// 		creatingTime, err := time.Parse("2006-01-02 15:04:05", msgReq.Date+" "+msgReq.Time)
-// 		if err != nil {
-// 			return nil, status.Error(codes.InvalidArgument, "Invalid time format")
-// 		}
-// 		msgPool = append(
-// 			msgPool,
-// 			storage.Message{
-// 				Text:             msgReq.Text,
-// 				CreatingDateTime: creatingTime,
-// 				FromUser:         msgReq.FromUser,
-// 				ToUser:           msgReq.ToUser,
-// 			},
-// 		)
-// 	}
-// }
+func (s *Server) CreateMessagesPool(ctx context.Context, in *grpc_api.MessagePoolCreationRequest) (*grpc_api.MessagePoolCreationResponse, error) {
+	method := "server.CreateMessagePool"
+	messages := make([]storage.Message, len(in.Messages))
+
+	for i, msg := range in.Messages {
+		creatingTime, err := time.Parse("2006-01-02 15:04:05", msg.GetDatetime())
+
+		if err != nil {
+			return nil, status.Error(codes.InvalidArgument, "Invalid time format")
+		}
+
+		messages[i] = storage.Message{
+			Text:             msg.GetText(),
+			CreatingDateTime: creatingTime,
+			FromUser:         msg.GetFromUser(),
+			ToUser:           msg.GetToUser(),
+		}
+	}
+
+	res := s.DB.Create(&messages)
+
+	if res.Error != nil {
+		s.Logger.Errorf("Error in %v: %v", method, res.Error)
+	}
+
+	s.Logger.Infof("Messages created: %v", res.RowsAffected)
+
+	ids := make([]uint32, len(messages))
+
+	for i, msg := range messages {
+		ids[i] = msg.ID
+	}
+
+	return &grpc_api.MessagePoolCreationResponse{Ids: ids}, nil
+}
 
 // func (s *Server) FindMessages(ctx context.Context, in *grpc_api.FindMessagesRequest) (*grpc_api.FindMessagesResponse, error) {
+
 // }
