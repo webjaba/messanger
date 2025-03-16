@@ -27,10 +27,9 @@ message AuthResponse {
 // request for create a single message
 message MessageCreationRequest {
     string text = 1;
-    string time = 2;
-    string date = 3;
-    uint32 from_user = 4;
-    uint32 to_user = 5;
+    string datetime = 2;
+    uint32 from_user = 3;
+    uint32 to_user = 4;
 }
 
 // response for creating a message
@@ -61,15 +60,14 @@ message FindUserResponse {
 // request for finding messages by user id
 message FindMessagesRequest {
     uint32 id = 1;
-    string date = 2;
+    string datetime = 2;
 }
 
 // message object
 message MessageForUser {
     string text = 1;
-    string time = 2;
-    string date = 3;
-    uint32 to_user = 4;
+    string datetime = 2;
+    uint32 to_user = 3;
 }
 
 // response for finding messages by user id
