@@ -190,6 +190,20 @@ func (s *Server) CreateMessagesPool(ctx context.Context, in *grpc_api.MessagePoo
 	return &grpc_api.MessagePoolCreationResponse{Ids: ids}, nil
 }
 
-// func (s *Server) FindMessages(ctx context.Context, in *grpc_api.FindMessagesRequest) (*grpc_api.FindMessagesResponse, error) {
+func (s *Server) FindMessages(ctx context.Context, in *grpc_api.FindMessagesRequest) (*grpc_api.FindMessagesResponse, error) {
+	messages := []storage.Message{}
 
-// }
+	s.DB.Where("from_user = ? AND creating_date_time > ?", in.Id, in.Datetime).Find(&messages)
+
+	msgPointers := make([]*grpc_api.MessageForUser, len(messages))
+
+	for i, msg := range messages {
+		msgPointers[i] = &grpc_api.MessageForUser{
+			Text:     msg.Text,
+			Datetime: msg.CreatingDateTime.String(),
+			ToUser:   msg.ToUser,
+		}
+	}
+
+	return &grpc_api.FindMessagesResponse{Messages: msgPointers}, nil
+}
